@@ -18,8 +18,8 @@ const _ownerName = 'Joseph Sungpil Choi';
 const _introduction = 'I am just a small time boy, livin in a lonely world';
 const _currentJob = 'Software Engineer';
 const _currentAddress = '2761 Millers Way Drive, Ellicott City, Maryland, 21043';
-const _currentEmail = 'jo@beepb00p.club';
 const _currentPhone = '01068513003';
+const _currentEmail = 'jo@beepb00p.club';
 const _birthYear = 1990;
 const _birthMonth = 7;
 const _birthDay = 7;
@@ -48,7 +48,7 @@ mocha.beforeEach(async () => {
     ]
   }).send({
     from: accounts[0],
-    gas: '4000000'
+    gas: 4e6.toString()
   });
   resume2 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
@@ -67,7 +67,7 @@ mocha.beforeEach(async () => {
     ]
   }).send({
     from: accounts[1],
-    gas: '4000000'
+    gas: 4e6.toString()
   });
   resume3 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
@@ -86,7 +86,7 @@ mocha.beforeEach(async () => {
     ]
   }).send({
     from: accounts[2],
-    gas: '4000000'
+    gas: 4e6.toString()
   });
   resume.setProvider(provider);
 });
