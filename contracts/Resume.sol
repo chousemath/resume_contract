@@ -20,11 +20,16 @@ contract Resume {
 
     function getUsers() public view returns (address[]) { return users; }
 
+    // make sure that whenever a user update his or her own record, to add that user
+    // to the total list of users
     modifier recordUser() {
         addContractUser(msg.sender);
         _;
     }
 
+    // a collaborator basically has near-admin capabilities, this should let the
+    // Korean government expand the team of people working on this blockchain
+    // to any arbitrary size
     function addCollaborator(address newCollaborator) public {
         address user = msg.sender;
         require(user == manager || isCollaborator(user));
@@ -46,6 +51,9 @@ contract Resume {
     function isContractUser(address sender) private view returns (bool) {
         return ContractUsers[sender];
     }
+
+    // The following functions are to be used mostly by regular citizen who
+    // want to update their profile
 
     function setAddress(string _address) public recordUser { Addresses[msg.sender] = _address; }
     function getAddress(address sender) public view returns (string) { return Addresses[sender]; }
