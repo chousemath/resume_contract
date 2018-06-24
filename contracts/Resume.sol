@@ -20,6 +20,11 @@ contract Resume {
 
     function getUsers() public view returns (address[]) { return users; }
 
+    modifier recordUser() {
+        addContractUser(msg.sender);
+        _;
+    }
+
     function addCollaborator(address newCollaborator) public {
         address user = msg.sender;
         require(user == manager || isCollaborator(user));
@@ -42,51 +47,27 @@ contract Resume {
         return ContractUsers[sender];
     }
 
-    function setAddress(string _address) public {
-        Addresses[msg.sender] = _address;
-        addContractUser(msg.sender);
-    }
+    function setAddress(string _address) public recordUser { Addresses[msg.sender] = _address; }
     function getAddress(address sender) public view returns (string) { return Addresses[sender]; }
 
-    function setDateOfBirth(uint256 timestamp) public {
-        DatesOfBirth[msg.sender] = timestamp;
-        addContractUser(msg.sender);
-    }
+    function setDateOfBirth(uint256 timestamp) public recordUser { DatesOfBirth[msg.sender] = timestamp; }
     function getDateOfBirth(address sender) public view returns (uint256) { return DatesOfBirth[sender]; }
 
-    function setDescription(string description) public {
-        Descriptions[msg.sender] = description;
-        addContractUser(msg.sender);
-    }
+    function setDescription(string description) public recordUser { Descriptions[msg.sender] = description; }
     function getDescription(address sender) public view returns (string) { return Descriptions[sender]; }
 
-    function setEmail(string email) public {
-        Emails[msg.sender] = email;
-        addContractUser(msg.sender);
-    }
+    function setEmail(string email) public recordUser { Emails[msg.sender] = email; }
     function getEmail(address sender) public view returns (string) { return Emails[sender]; }
 
-    function setGender(uint8 gender) public {
-        Genders[msg.sender] = gender;
-        addContractUser(msg.sender);
-    }
+    function setGender(uint8 gender) public recordUser { Genders[msg.sender] = gender; }
     function getGender(address sender) public view returns (uint8) { return Genders[sender]; }
 
-    function setName(string name) public {
-        Names[msg.sender] = name;
-        addContractUser(msg.sender);
-    }
+    function setName(string name) public recordUser { Names[msg.sender] = name; }
     function getName(address sender) public view returns (string) { return Names[sender]; }
 
-    function setPhone(string phone) public {
-        PhoneNumbers[msg.sender] = phone;
-        addContractUser(msg.sender);
-    }
+    function setPhone(string phone) public recordUser { PhoneNumbers[msg.sender] = phone; }
     function getPhone(address sender) public view returns (string) { return PhoneNumbers[sender]; }
 
-    function setPosition(string position) public {
-        Positions[msg.sender] = position;
-        addContractUser(msg.sender);
-    }
+    function setPosition(string position) public recordUser { Positions[msg.sender] = position; }
     function getPosition(address sender) public view returns (string) { return Positions[sender]; }
 }
