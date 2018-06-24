@@ -28,4 +28,4 @@ const deploy = async () => {
   });
   console.log('\n\n\n>>> ', result.options.address);
 };
-deploy();
+deploy().then(() => console.log('\nfinished deploying contract!')).catch(err => console.log(err));
