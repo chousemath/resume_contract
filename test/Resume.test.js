@@ -13,77 +13,27 @@ let resume;
 let resume2;
 let resume3;
 
-const _uuid = '0123456789';
-const _ownerName = 'Joseph Sungpil Choi';
-const _introduction = 'I am just a small time boy, livin in a lonely world';
-const _currentJob = 'Software Engineer';
-const _currentAddress = '2761 Millers Way Drive, Ellicott City, Maryland, 21043';
-const _currentPhone = '01068513003';
-const _currentEmail = 'jo@beepb00p.club';
-const _birthYear = 1990;
-const _birthMonth = 7;
-const _birthDay = 7;
-const _gender = 1;
-const _gender2 = 2;
-const _gender3 = 3;
-
 beforeEach(async () => {
   // get a list of all accounts
   accounts = await web3.eth.getAccounts();
   // use one of the accounts to deploy a contract
   resume = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
-    arguments: [
-      _uuid,
-      _ownerName,
-      _introduction,
-      _currentJob,
-      _currentAddress,
-      _currentPhone,
-      _currentEmail,
-      _birthYear,
-      _birthMonth,
-      _birthDay,
-      _gender
-    ]
+    arguments: []
   }).send({
     from: accounts[0],
     gas: 4e6.toString()
   });
   resume2 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
-    arguments: [
-      _uuid,
-      _ownerName,
-      _introduction,
-      _currentJob,
-      _currentAddress,
-      _currentPhone,
-      _currentEmail,
-      _birthYear,
-      _birthMonth,
-      _birthDay,
-      _gender2
-    ]
+    arguments: []
   }).send({
     from: accounts[1],
     gas: 4e6.toString()
   });
   resume3 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
-    arguments: [
-      _uuid,
-      _ownerName,
-      _introduction,
-      _currentJob,
-      _currentAddress,
-      _currentPhone,
-      _currentEmail,
-      _birthYear,
-      _birthMonth,
-      _birthDay,
-      _gender3
-    ]
+    arguments: []
   }).send({
     from: accounts[2],
     gas: 4e6.toString()
@@ -99,84 +49,87 @@ describe('Resume', () => {
     const manager = await resume.methods.manager().call();
     const manager2 = await resume2.methods.manager().call();
     const manager3 = await resume3.methods.manager().call();
-    const uuid = await resume.methods.uuid().call();
-    const ownerName = await resume.methods.ownerName().call();
-    const introduction = await resume.methods.introduction().call();
-    const currentJob = await resume.methods.currentJob().call();
-    const currentAddress = await resume.methods.currentAddress().call();
-    const currentPhone = await resume.methods.currentPhone().call();
-    const currentEmail = await resume.methods.currentEmail().call();
-    const birthYear = await resume.methods.birthYear().call();
-    const birthMonth = await resume.methods.birthMonth().call();
-    const birthDay = await resume.methods.birthDay().call();
-    const gender = await resume.methods.gender().call();
-    const gender2 = await resume2.methods.gender().call();
-    const gender3 = await resume3.methods.gender().call();
 
     assert.equal(manager, accounts[0]);
     assert.equal(manager2, accounts[1]);
     assert.equal(manager3, accounts[2]);
-    assert.equal(uuid, _uuid);
-    assert.equal(ownerName, _ownerName);
-    assert.equal(introduction, _introduction);
-    assert.equal(currentJob, _currentJob);
-    assert.equal(currentAddress, _currentAddress);
-    assert.equal(currentPhone, _currentPhone);
-    assert.equal(currentEmail, _currentEmail);
-    assert.equal(birthYear, _birthYear);
-    assert.equal(birthMonth, _birthMonth);
-    assert.equal(birthDay, _birthDay);
-    assert.equal(gender, _gender);
-    assert.equal(gender2, _gender2);
-    assert.equal(gender3, _gender3);
   });
 
-  it('successfully updates a person\'s current address', async () => {
-    const newAddress = '373 Gangnam-daero Seocho-gu Seoul';
-    await resume.methods.setCurrentAddress(newAddress).send({ from: accounts[0] });
-    const currentAddress = await resume.methods.currentAddress().call();
-    assert.equal(currentAddress, newAddress);
-  });
-
-  it('successfully updates a person\'s current job', async () => {
-    const newEmail = 'testcase@beepb00p.club';
-    await resume.methods.setCurrentEmail(newEmail).send({ from: accounts[0] });
-    const currentEmail = await resume.methods.currentEmail().call();
-    assert.equal(currentEmail, newEmail);
-  });
-  
-  it('successfully updates a person\'s current job', async () => {
-    const newJob = 'Senior Software Engineer';
-    await resume.methods.setCurrentJob(newJob).send({ from: accounts[0] });
-    const currentJob = await resume.methods.currentJob().call();
-    assert.equal(currentJob, newJob);
-  });
-
-  it('successfully updates a person\'s current phone number', async () => {
-    const newPhone = '021233003';
-    await resume.methods.setCurrentPhone(newPhone).send({ from: accounts[0] });
-    const currentPhone = await resume.methods.currentPhone().call();
-    assert.equal(currentPhone, newPhone);
-  });
-
-  it('successfully updates a person\'s current gender', async () => {
-    const newGender = 3;
-    await resume.methods.setGender(newGender).send({ from: accounts[0] });
-    const currentGender = await resume.methods.gender().call();
-    assert.equal(currentGender, newGender);
-  });
-
-  it('successfully updates a person\'s introduction', async () => {
-    const newIntroduction = 'i am a new introduction';
-    await resume.methods.setIntroduction(newIntroduction).send({ from: accounts[0] });
-    const introduction = await resume.methods.introduction().call();
-    assert.equal(introduction, newIntroduction);
+  it('successfully adds a collaborator if manager or a collaborator', async () => {
+    const collaboratorStatus = await resume.methods.isCollaborator(accounts[1]).call();
+    assert.equal(collaboratorStatus, false);
+    // test to make sure that the contract manager can add a collaborator
+    await resume.methods.addCollaborator(accounts[1]).send({ from: accounts[0] });
+    const collaboratorStatus2 = await resume.methods.isCollaborator(accounts[1]).call();
+    assert.equal(collaboratorStatus2, true);
+    const collaboratorStatus3 = await resume.methods.isCollaborator(accounts[2]).call();
+    assert.equal(collaboratorStatus3, false);
+    // test to make sure that a collaborator can add another collaborator
+    await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1] });
+    const collaboratorStatus4 = await resume.methods.isCollaborator(accounts[2]).call();
+    assert.equal(collaboratorStatus4, true);
   });
 
   it('successfully updates a person\'s name', async () => {
-    const newOwnerName = 'Steven Yuen';
-    await resume.methods.setOwnerName(newOwnerName).send({ from: accounts[0] });
-    const ownerName = await resume.methods.ownerName().call();
-    assert.equal(ownerName, newOwnerName);
+    const newName = 'Spongebob Squarepants';
+    const oldName = await resume.methods.getName(accounts[1]).call();
+    assert.equal(oldName === newName, false);
+    await resume.methods.setName(newName).send({ from: accounts[1] });
+    const name = await resume.methods.getName(accounts[1]).call();
+    assert.equal(name, newName);
+  });
+
+  it('successfully updates a person\'s description', async () => {
+    const newDecription = 'At vero eos et accusamus et iusto odio.';
+    const oldDescription = await resume.methods.getDescription(accounts[1]).call();
+    assert.equal(oldDescription === newDecription, false);
+    await resume.methods.setDescription(newDecription).send({ from: accounts[1] });
+    const description = await resume.methods.getDescription(accounts[1]).call();
+    assert.equal(description, newDecription);
+  });
+
+  it('successfully updates a person\'s position', async () => {
+    const newPosition = 'Senior Software Engineer';
+    const oldPosition = await resume.methods.getPosition(accounts[1]).call();
+    assert.equal(oldPosition === newPosition, false);
+    await resume.methods.setPosition(newPosition).send({ from: accounts[1] });
+    const position = await resume.methods.getPosition(accounts[1]).call();
+    assert.equal(position, newPosition);
+  });
+
+  it('successfully updates a person\'s phone number', async () => {
+    const newPhone = '123456789';
+    const oldPhone = await resume.methods.getPhone(accounts[1]).call();
+    assert.equal(oldPhone === newPhone, false);
+    await resume.methods.setPhone(newPhone).send({ from: accounts[1] });
+    const phone = await resume.methods.getPhone(accounts[1]).call();
+    assert.equal(phone, newPhone);
+  });
+
+  it('successfully updates a person\'s email address', async () => {
+    const newEmail = 'asdflkj@beepb00p.club';
+    const oldEmail = await resume.methods.getEmail(accounts[1]).call();
+    assert.equal(oldEmail === newEmail, false);
+    await resume.methods.setEmail(newEmail).send({ from: accounts[1] });
+    const email = await resume.methods.getEmail(accounts[1]).call();
+    assert.equal(email, newEmail);
+  });
+
+  it('successfully updates a person\'s date of birth', async () => {
+    const newDateOfBirth = new Date().getTime();
+    const oldDateOfBirth = await resume.methods.getDateOfBirth(accounts[1]).call();
+    assert.equal(oldDateOfBirth === newDateOfBirth, false);
+    await resume.methods.setDateOfBirth(newDateOfBirth).send({ from: accounts[1] });
+    const dateOfBirth = await resume.methods.getDateOfBirth(accounts[1]).call();
+    assert.equal(dateOfBirth, newDateOfBirth);
+  });
+
+  it('successfully updates a person\'s gender', async () => {
+    const newGender = 3;
+    const oldGender = await resume.methods.getGender(accounts[1]).call();
+    assert.equal(oldGender === newGender, false);
+    await resume.methods.setGender(newGender).send({ from: accounts[1] });
+    const gender = await resume.methods.getGender(accounts[1]).call();
+    assert.equal(gender, newGender);
   });
 });
