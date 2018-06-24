@@ -96,6 +96,9 @@ describe('Resume', () => {
     assert.ok(resume.options.address);
   });
   it('initializes the contract with the values passed to the constructor', async () => {
+    const manager = await resume.methods.manager().call();
+    const manager2 = await resume2.methods.manager().call();
+    const manager3 = await resume3.methods.manager().call();
     const uuid = await resume.methods.uuid().call();
     const ownerName = await resume.methods.ownerName().call();
     const introduction = await resume.methods.introduction().call();
@@ -110,6 +113,9 @@ describe('Resume', () => {
     const gender2 = await resume2.methods.gender().call();
     const gender3 = await resume3.methods.gender().call();
 
+    assert.equal(manager, accounts[0]);
+    assert.equal(manager2, accounts[1]);
+    assert.equal(manager3, accounts[2]);
     assert.equal(uuid, _uuid);
     assert.equal(ownerName, _ownerName);
     assert.equal(introduction, _introduction);

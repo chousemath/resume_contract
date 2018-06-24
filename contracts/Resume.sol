@@ -3,6 +3,7 @@ pragma solidity ^0.4.17;
 contract Resume {
     // solidity enums start at 0
     enum Genders { Unspecified, Male, Female, Other }
+    address public manager;
     string public uuid; // could be social security number, once set, cannot be changed
     string public ownerName; // government-issued name
     string public introduction; // quick introduction of who this person is
@@ -10,9 +11,9 @@ contract Resume {
     string public currentAddress;
     string public currentPhone;
     string public currentEmail;
-    uint public birthYear; // can be unsigned integer
-    uint public birthMonth;
-    uint public birthDay;
+    uint16 public birthYear; // can be unsigned integer
+    uint8 public birthMonth;
+    uint8 public birthDay;
     Genders public gender;
 
     constructor(
@@ -23,11 +24,12 @@ contract Resume {
         string _currentAddress,
         string _currentPhone,
         string _currentEmail,
-        uint _birthYear,
-        uint _birthMonth,
-        uint _birthDay,
+        uint16 _birthYear,
+        uint8 _birthMonth,
+        uint8 _birthDay,
         Genders _gender
     ) public {
+        manager = msg.sender;
         uuid = _uuid;
         ownerName = _ownerName;
         introduction = _introduction;
