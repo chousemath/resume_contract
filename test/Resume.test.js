@@ -27,7 +27,7 @@ const _gender = 1;
 const _gender2 = 2;
 const _gender3 = 3;
 
-mocha.beforeEach(async () => {
+beforeEach(async () => {
   // get a list of all accounts
   accounts = await web3.eth.getAccounts();
   // use one of the accounts to deploy a contract
@@ -91,11 +91,11 @@ mocha.beforeEach(async () => {
   resume.setProvider(provider);
 });
 
-mocha.describe('Resume', () => {
-  mocha.it('deploys a contract', () => {
+describe('Resume', () => {
+  it('deploys a contract', () => {
     assert.ok(resume.options.address);
   });
-  mocha.it('initializes the contract with the values passed to the constructor', async () => {
+  it('initializes the contract with the values passed to the constructor', async () => {
     const uuid = await resume.methods.uuid().call();
     const ownerName = await resume.methods.ownerName().call();
     const introduction = await resume.methods.introduction().call();
@@ -125,49 +125,49 @@ mocha.describe('Resume', () => {
     assert.equal(gender3, _gender3);
   });
 
-  mocha.it('successfully updates a person\'s current address', async () => {
+  it('successfully updates a person\'s current address', async () => {
     const newAddress = '373 Gangnam-daero Seocho-gu Seoul';
     await resume.methods.setCurrentAddress(newAddress).send({ from: accounts[0] });
     const currentAddress = await resume.methods.currentAddress().call();
     assert.equal(currentAddress, newAddress);
   });
 
-  mocha.it('successfully updates a person\'s current job', async () => {
+  it('successfully updates a person\'s current job', async () => {
     const newEmail = 'testcase@beepb00p.club';
     await resume.methods.setCurrentEmail(newEmail).send({ from: accounts[0] });
     const currentEmail = await resume.methods.currentEmail().call();
     assert.equal(currentEmail, newEmail);
   });
   
-  mocha.it('successfully updates a person\'s current job', async () => {
+  it('successfully updates a person\'s current job', async () => {
     const newJob = 'Senior Software Engineer';
     await resume.methods.setCurrentJob(newJob).send({ from: accounts[0] });
     const currentJob = await resume.methods.currentJob().call();
     assert.equal(currentJob, newJob);
   });
 
-  mocha.it('successfully updates a person\'s current phone number', async () => {
+  it('successfully updates a person\'s current phone number', async () => {
     const newPhone = '021233003';
     await resume.methods.setCurrentPhone(newPhone).send({ from: accounts[0] });
     const currentPhone = await resume.methods.currentPhone().call();
     assert.equal(currentPhone, newPhone);
   });
 
-  mocha.it('successfully updates a person\'s current gender', async () => {
+  it('successfully updates a person\'s current gender', async () => {
     const newGender = 3;
     await resume.methods.setGender(newGender).send({ from: accounts[0] });
     const currentGender = await resume.methods.gender().call();
     assert.equal(currentGender, newGender);
   });
 
-  mocha.it('successfully updates a person\'s introduction', async () => {
+  it('successfully updates a person\'s introduction', async () => {
     const newIntroduction = 'i am a new introduction';
     await resume.methods.setIntroduction(newIntroduction).send({ from: accounts[0] });
     const introduction = await resume.methods.introduction().call();
     assert.equal(introduction, newIntroduction);
   });
 
-  mocha.it('successfully updates a person\'s name', async () => {
+  it('successfully updates a person\'s name', async () => {
     const newOwnerName = 'Steven Yuen';
     await resume.methods.setOwnerName(newOwnerName).send({ from: accounts[0] });
     const ownerName = await resume.methods.ownerName().call();
