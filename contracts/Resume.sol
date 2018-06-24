@@ -32,18 +32,25 @@ contract Resume {
 
     function setAddress(string _address) public { Addresses[msg.sender] = _address; }
     function getAddress(address sender) public view returns (string) { return Addresses[sender]; }
+
     function setDateOfBirth(uint256 timestamp) public { DatesOfBirth[msg.sender] = timestamp; }
     function getDateOfBirth(address sender) public view returns (uint256) { return DatesOfBirth[sender]; }
+
     function setDescription(string description) public { Descriptions[msg.sender] = description; }
     function getDescription(address sender) public view returns (string) { return Descriptions[sender]; }
+
     function setEmail(string email) public { Emails[msg.sender] = email; }
     function getEmail(address sender) public view returns (string) { return Emails[sender]; }
+
     function setGender(uint8 gender) public { Genders[msg.sender] = gender; }
     function getGender(address sender) public view returns (uint8) { return Genders[sender]; }
+
     function setName(string name) public { Names[msg.sender] = name; }
     function getName(address sender) public view returns (string) { return Names[sender]; }
+
     function setPhone(string phone) public { PhoneNumbers[msg.sender] = phone; }
     function getPhone(address sender) public view returns (string) { return PhoneNumbers[sender]; }
+    
     function setPosition(string position) public { Positions[msg.sender] = position; }
     function getPosition(address sender) public view returns (string) { return Positions[sender]; }
 }
