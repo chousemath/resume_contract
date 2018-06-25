@@ -1,7 +1,15 @@
 pragma solidity ^0.4.17;
 
 contract Resume {
-    // solidity enums start at 0
+    struct Experience {
+        string companyName; // official name of the company
+        string companyAddress; // official address of the company
+        string position; // the position the applicant held
+        uint256 startDate; // when this job began
+        uint256 endDate; // when this job ended
+        address document; // IPFS document related to this experience
+    }
+
     address public manager;
     address[] public users;
 
@@ -15,6 +23,7 @@ contract Resume {
     mapping (address => uint256) private DatesOfBirth; // unix timestamps
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
     mapping (address => bool) private ContractUsers; // keeps track of all users who have interacted with this contract
+    mapping (address => address) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
 
     constructor() public { manager = msg.sender; }
 
