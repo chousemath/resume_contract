@@ -290,6 +290,13 @@ describe('Resume', () => {
   });
 
   it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {
+    // a non-manager/non-collaborator should not be able to set a confirmation date
+    try {
+      await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[1] });
+      assert(false);
+    } catch (err) {
+      assert(err);
+    }
     await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[0] });
     const confirmedAt = await resume.methods.getConfirmationDate(accounts[3]).call();
     const now = Math.floor(Date.now() / 1000);
