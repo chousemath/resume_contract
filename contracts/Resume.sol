@@ -14,14 +14,12 @@ contract Resume {
         uint8 size;
     }
     struct Document {
-        string title;
-        string description;
+        bytes32 title;
         Multihash document;
     }
     struct Experience {
-        string companyName; // official name of the company
-        string companyAddress; // official address of the company
-        string position; // the position the applicant held
+        bytes32 companyName; // official name of the company
+        bytes32 position; // the position the applicant held
         uint256 startDate; // when this job began
         uint256 endDate; // when this job ended
         Document document; // IPFS document related to this experience
@@ -31,12 +29,16 @@ contract Resume {
     address[] public users;
 
     mapping (address => bool) private Collaborators;
-    mapping (address => string) private Names; // full name of the applicant
-    mapping (address => Multihash) private Descriptions; // brief description of the applicant
-    mapping (address => string) private Positions; // current job held by applicant
-    mapping (address => string) private Addresses; // full home address
-    mapping (address => string) private PhoneNumbers; // preferably mobile phone number
-    mapping (address => string) private Emails; // email addresses
+    mapping (address => bytes32) private Names; // full name of the applicant
+    mapping (address => bytes32) private Positions; // current job held by applicant
+
+    mapping (address => bytes32) private AddressStreets; // full home street address
+    mapping (address => uint32) private AddressCities; // full home city (use integer code of city)
+    mapping (address => uint32) private AddressRegions; // full home state/region (use integer code of region)
+    mapping (address => uint32) private AddressZipcodes; // full home zipcode
+
+    mapping (address => bytes32) private PhoneNumbers; // preferably mobile phone number
+    mapping (address => bytes32) private Emails; // email addresses
     mapping (address => uint256) private DatesOfBirth; // unix timestamps in seconds
     mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
@@ -94,33 +96,35 @@ contract Resume {
     // The following functions are to be used mostly by regular citizen who
     // want to update their profile
 
-    // set and retrieve the current home address for the applicant
-    function setAddress(string _address) public recordUser { Addresses[msg.sender] = _address; }
-    function getAddress(address sender) public view returns (string) { return Addresses[sender]; }
-    function deleteAddress() public { delete Addresses[msg.sender]; }
+    // set and retrieve the current home street for the applicant
+    function setAddressStreet(bytes32 _address) public recordUser { AddressStreets[msg.sender] = _address; }
+    function getAddressStreet(address sender) public view returns (bytes32) { return AddressStreets[sender]; }
+    function deleteAddressStreet() public { delete AddressStreets[msg.sender]; }
+
+    // set and retrieve the current home city for the applicant
+    function setAddressCity(uint32 _address) public recordUser { AddressCities[msg.sender] = _address; }
+    function getAddressCity(address sender) public view returns (uint32) { return AddressCities[sender]; }
+    function deleteAddressCity() public { delete AddressCities[msg.sender]; }
+
+    // set and retrieve the current home region/state for the applicant
+    function setAddressRegion(uint32 _address) public recordUser { AddressRegions[msg.sender] = _address; }
+    function getAddressRegion(address sender) public view returns (uint32) { return AddressRegions[sender]; }
+    function deleteAddressRegion() public { delete AddressRegions[msg.sender]; }
+
+    // set and retrieve the current home zipcode for the applicant
+    function setAddressZipcode(uint32 _address) public recordUser { AddressZipcodes[msg.sender] = _address; }
+    function getAddressZipcode(address sender) public view returns (uint32) { return AddressZipcodes[sender]; }
+    function deleteAddressZipcode() public { delete AddressZipcodes[msg.sender]; }
+
 
     // set and retrieve the date of birth for the applicant
     function setDateOfBirth(uint256 timestamp) public recordUser { DatesOfBirth[msg.sender] = timestamp; }
     function getDateOfBirth(address sender) public view returns (uint256) { return DatesOfBirth[sender]; }
     function deleteDateOfBirth() public { delete DatesOfBirth[msg.sender]; }
 
-    // set and retrieve the short description for the applicant
-    function setDescription(bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Multihash memory description = Multihash(_digest, _hashFunction, _size);
-        Descriptions[msg.sender] = description;
-    }
-    function getDescription(address sender) public view returns (bytes32 digest, uint8 hashFunction, uint8 size) {
-        Multihash storage description = Descriptions[sender];
-        return (description.digest, description.hashFunction, description.size);
-    }
-    function deleteDescription(address sender) public {
-        require(Descriptions[sender].digest != 0);
-        delete Descriptions[sender];
-    }
-
     // set and retrieve the email address of the applicant
-    function setEmail(string email) public recordUser { Emails[msg.sender] = email; }
-    function getEmail(address sender) public view returns (string) { return Emails[sender]; }
+    function setEmail(bytes32 email) public recordUser { Emails[msg.sender] = email; }
+    function getEmail(address sender) public view returns (bytes32) { return Emails[sender]; }
     function deleteEmail() public { delete Emails[msg.sender]; }
 
     // set and retrieve the gender of the applicant
@@ -129,18 +133,18 @@ contract Resume {
     function deleteGender() public { delete Genders[msg.sender]; }
 
     // set and retrieve the full name of the applicant
-    function setName(string name) public recordUser { Names[msg.sender] = name; }
-    function getName(address sender) public view returns (string) { return Names[sender]; }
+    function setName(bytes32 name) public recordUser { Names[msg.sender] = name; }
+    function getName(address sender) public view returns (bytes32) { return Names[sender]; }
     function deleteName() public { delete Names[msg.sender]; }
 
     // set and retrieve the phone number of the applicant
-    function setPhone(string phone) public recordUser { PhoneNumbers[msg.sender] = phone; }
-    function getPhone(address sender) public view returns (string) { return PhoneNumbers[sender]; }
+    function setPhone(bytes32 phone) public recordUser { PhoneNumbers[msg.sender] = phone; }
+    function getPhone(address sender) public view returns (bytes32) { return PhoneNumbers[sender]; }
     function deletePhone() public { delete PhoneNumbers[msg.sender]; }
 
     // set and retrieve the current position (job title) of the applicant
-    function setPosition(string position) public recordUser { Positions[msg.sender] = position; }
-    function getPosition(address sender) public view returns (string) { return Positions[sender]; }
+    function setPosition(bytes32 position) public recordUser { Positions[msg.sender] = position; }
+    function getPosition(address sender) public view returns (bytes32) { return Positions[sender]; }
     function deletePosition() public { delete Positions[msg.sender]; }
 
     // set and retrieve the current profile image of the applicant

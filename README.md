@@ -12,6 +12,10 @@
 
 * https://github.com/saurfang/ipfs-multihash-on-solidity
 
+### Why use Bytes32 instead of Strings?
+
+> The EVM has a word-size of 32 bytes, so it is "optimized" for dealing with data in chunks of 32 bytes. (Compilers, such as Solidity, have to do more work and generate more bytecode when data isn't in chunks of 32 bytes, which effectively leads to higher gas cost.)
+
 ![Basic Types](images/basic_types.png)
 ![Integer Ranges](images/integer_ranges.png)
 ![Unsigned Integer Ranges](images/unsigned_integer_ranges.png)

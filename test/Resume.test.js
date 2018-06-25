@@ -75,15 +75,16 @@ describe('Resume', () => {
   });
 
   it('successfully updates a person\'s name', async () => {
-    const newName = 'Jay Park';
+    const newName = 'Jay Park The Third';
+    const newNameBytes32 = web3.utils.utf8ToHex(newName);
     const oldName = await resume.methods.getName(accounts[1]).call();
-    assert.notEqual(oldName, newName);
+    assert.notEqual(oldName, newNameBytes32);
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setName(newName).send({ from: accounts[1] });
+    await resume.methods.setName(newNameBytes32).send({ from: accounts[1] });
     const name = await resume.methods.getName(accounts[1]).call();
-    assert.equal(name, newName);
+    assert.equal(name, web3.utils.padRight(newNameBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
@@ -93,26 +94,17 @@ describe('Resume', () => {
     assert.notEqual(nameAfterDelete, name);
   });
 
-  it('successfully updates a person\'s profile description', async () => {
-    const originalMultihash = 'QmePw8gVcBMb8x6kAep6aMBAX23hCSk6iZW3i9VKkiFhu1';
-    const newDescription = multihash.getBytes32FromMultihash(originalMultihash);
-    await resume.methods.setDescription(newDescription.digest, newDescription.hashFunction, newDescription.size).send({
-      from: accounts[1]
-    });
-    const description = await resume.methods.getDescription(accounts[1]).call();
-    assert.equal(multihash.getMultihashFromContractResponse(description), originalMultihash);
-  });
-
   it('successfully updates a person\'s position', async () => {
     const newPosition = 'Senior Software Engineer';
+    const newPositionBytes32 = web3.utils.utf8ToHex(newPosition);
     const oldPosition = await resume.methods.getPosition(accounts[1]).call();
-    assert.notEqual(oldPosition, newPosition);
+    assert.notEqual(oldPosition, newPositionBytes32);
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setPosition(newPosition).send({ from: accounts[1] });
+    await resume.methods.setPosition(newPositionBytes32).send({ from: accounts[1] });
     const position = await resume.methods.getPosition(accounts[1]).call();
-    assert.equal(position, newPosition);
+    assert.equal(position, web3.utils.padRight(newPositionBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
@@ -123,15 +115,16 @@ describe('Resume', () => {
   });
 
   it('successfully updates a person\'s phone number', async () => {
-    const newPhone = '123456789';
+    const newPhone = '020-1234-1141';
+    const newPhoneBytes32 = web3.utils.utf8ToHex(newPhone);
     const oldPhone = await resume.methods.getPhone(accounts[1]).call();
-    assert.notEqual(oldPhone, newPhone);
+    assert.notEqual(oldPhone, newPhoneBytes32);
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setPhone(newPhone).send({ from: accounts[1] });
+    await resume.methods.setPhone(newPhoneBytes32).send({ from: accounts[1] });
     const phone = await resume.methods.getPhone(accounts[1]).call();
-    assert.equal(phone, newPhone);
+    assert.equal(phone, web3.utils.padRight(newPhoneBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
 
@@ -143,15 +136,16 @@ describe('Resume', () => {
   });
 
   it('successfully updates a person\'s email address', async () => {
-    const newEmail = 'asdflkj@beepb00p.club';
+    const newEmail = '5a3s5d3fl5kj@beepb00p.club';
+    const newEmailBytes32 = web3.utils.utf8ToHex(newEmail);
     const oldEmail = await resume.methods.getEmail(accounts[1]).call();
-    assert.notEqual(oldEmail, newEmail);
+    assert.notEqual(oldEmail, newEmailBytes32);
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setEmail(newEmail).send({ from: accounts[1] });
+    await resume.methods.setEmail(newEmailBytes32).send({ from: accounts[1] });
     const email = await resume.methods.getEmail(accounts[1]).call();
-    assert.equal(email, newEmail);
+    assert.equal(email, web3.utils.padRight(newEmailBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
@@ -161,24 +155,83 @@ describe('Resume', () => {
     assert.notEqual(emailAfterDelete, email);
   });
 
-  // it('successfully updates a person\'s home address', async () => {
-  //   const newAddress = '1234 Potato Street, Meximan Town, CA, 31300';
-  //   const oldAddress = await resume.methods.getAddress(accounts[1]).call();
-  //   assert.notEqual(oldAddress, newAddress);
+  it('successfully updates a person\'s home address (street)', async () => {
+    // const newAddress = '서울특별시 서초구 반포대로 58, 101동 501호';
+    const newAddress = 'STS-SCG-BPDR-58-101D-501H';
+    const newAddressBytes32 = web3.utils.utf8ToHex(newAddress);
+    const oldAddress = await resume.methods.getAddressStreet(accounts[1]).call();
+    assert.notEqual(oldAddress, newAddressBytes32);
 
-  //   const usersBefore = await resume.methods.getUsers().call();
+    const usersBefore = await resume.methods.getUsers().call();
 
-  //   await resume.methods.setAddress(newAddress).send({ from: accounts[1] });
-  //   const address = await resume.methods.getAddress(accounts[1]).call();
-  //   assert.equal(address, newAddress);
+    await resume.methods.setAddressStreet(newAddressBytes32).send({ from: accounts[1] });
+    const address = await resume.methods.getAddressStreet(accounts[1]).call();
+    assert.equal(address, web3.utils.padRight(newAddressBytes32, 64));
 
-  //   const usersAfter = await resume.methods.getUsers().call();
-  //   assert.equal(usersAfter.length, usersBefore.length + 1);
+    const usersAfter = await resume.methods.getUsers().call();
+    assert.equal(usersAfter.length, usersBefore.length + 1);
 
-  //   await resume.methods.deleteAddress().send({ from: accounts[1] });
-  //   const addressAfterDelete = await resume.methods.getAddress(accounts[1]).call();
-  //   assert.notEqual(addressAfterDelete, address);
-  // });
+    await resume.methods.deleteAddressStreet().send({ from: accounts[1] });
+    const addressAfterDelete = await resume.methods.getAddressStreet(accounts[1]).call();
+    assert.notEqual(addressAfterDelete, address);
+  });
+
+  it('successfully updates a person\'s home address (city)', async () => {
+    const newAddress = 25;
+    const oldAddress = await resume.methods.getAddressCity(accounts[1]).call();
+    assert.notEqual(oldAddress, newAddress);
+
+    const usersBefore = await resume.methods.getUsers().call();
+
+    await resume.methods.setAddressCity(newAddress).send({ from: accounts[1] });
+    const address = await resume.methods.getAddressCity(accounts[1]).call();
+    assert.equal(address, newAddress);
+
+    const usersAfter = await resume.methods.getUsers().call();
+    assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteAddressCity().send({ from: accounts[1] });
+    const addressAfterDelete = await resume.methods.getAddressCity(accounts[1]).call();
+    assert.notEqual(addressAfterDelete, address);
+  });
+
+  it('successfully updates a person\'s home address (region)', async () => {
+    const newAddress = 13;
+    const oldAddress = await resume.methods.getAddressRegion(accounts[1]).call();
+    assert.notEqual(oldAddress, newAddress);
+
+    const usersBefore = await resume.methods.getUsers().call();
+
+    await resume.methods.setAddressRegion(newAddress).send({ from: accounts[1] });
+    const address = await resume.methods.getAddressRegion(accounts[1]).call();
+    assert.equal(address, newAddress);
+
+    const usersAfter = await resume.methods.getUsers().call();
+    assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteAddressRegion().send({ from: accounts[1] });
+    const addressAfterDelete = await resume.methods.getAddressRegion(accounts[1]).call();
+    assert.notEqual(addressAfterDelete, address);
+  });
+
+  it('successfully updates a person\'s home address (zipcode)', async () => {
+    const newAddress = 84323;
+    const oldAddress = await resume.methods.getAddressZipcode(accounts[1]).call();
+    assert.notEqual(oldAddress, newAddress);
+
+    const usersBefore = await resume.methods.getUsers().call();
+
+    await resume.methods.setAddressZipcode(newAddress).send({ from: accounts[1] });
+    const address = await resume.methods.getAddressZipcode(accounts[1]).call();
+    assert.equal(address, newAddress);
+
+    const usersAfter = await resume.methods.getUsers().call();
+    assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteAddressRegion().send({ from: accounts[1] });
+    const addressAfterDelete = await resume.methods.getAddressRegion(accounts[1]).call();
+    assert.notEqual(addressAfterDelete, address);
+  });
 
   it('successfully updates a person\'s date of birth', async () => {
     const newDateOfBirth = new Date().getTime();
