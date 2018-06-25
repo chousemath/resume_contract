@@ -44,6 +44,8 @@ contract Resume {
         return Collaborators[_collaborator];
     }
 
+    // Keep a running list of all applicants who have submitted their personal data
+    // to the blockchain
     function addContractUser(address sender) private {
         require(!isContractUser(sender));
         users.push(sender);
@@ -55,27 +57,35 @@ contract Resume {
     // The following functions are to be used mostly by regular citizen who
     // want to update their profile
 
+    // set and retrieve the current home address for the applicant
     function setAddress(string _address) public recordUser { Addresses[msg.sender] = _address; }
     function getAddress(address sender) public view returns (string) { return Addresses[sender]; }
 
+    // set and retrieve the date of birth for the applicant
     function setDateOfBirth(uint256 timestamp) public recordUser { DatesOfBirth[msg.sender] = timestamp; }
     function getDateOfBirth(address sender) public view returns (uint256) { return DatesOfBirth[sender]; }
 
+    // set and retrieve the short description for the applicant
     function setDescription(string description) public recordUser { Descriptions[msg.sender] = description; }
     function getDescription(address sender) public view returns (string) { return Descriptions[sender]; }
 
+    // set and retrieve the email address of the applicant
     function setEmail(string email) public recordUser { Emails[msg.sender] = email; }
     function getEmail(address sender) public view returns (string) { return Emails[sender]; }
 
+    // set and retrieve the gender of the applicant
     function setGender(uint8 gender) public recordUser { Genders[msg.sender] = gender; }
     function getGender(address sender) public view returns (uint8) { return Genders[sender]; }
 
+    // set and retrieve the full name of the applicant
     function setName(string name) public recordUser { Names[msg.sender] = name; }
     function getName(address sender) public view returns (string) { return Names[sender]; }
 
+    // set and retrieve the phone number of the applicant
     function setPhone(string phone) public recordUser { PhoneNumbers[msg.sender] = phone; }
     function getPhone(address sender) public view returns (string) { return PhoneNumbers[sender]; }
 
+    // set and retrieve the current position (job title) of the applicant
     function setPosition(string position) public recordUser { Positions[msg.sender] = position; }
     function getPosition(address sender) public view returns (string) { return Positions[sender]; }
 }
