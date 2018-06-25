@@ -60,6 +60,14 @@ describe('Resume', () => {
   });
 
   it('successfully adds a collaborator if manager or a collaborator', async () => {
+    // a non-collaborator trying to add a new collaborator should throw an error
+    try {
+      await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1] });
+      assert(false);
+    } catch (err) {
+      assert(err);
+    }
+
     const collaboratorStatus = await resume.methods.isCollaborator(accounts[1]).call();
     assert.equal(collaboratorStatus, false);
     // test to make sure that the contract manager can add a collaborator
