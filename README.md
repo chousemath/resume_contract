@@ -8,6 +8,10 @@
 
 * A confirmation date is a unix timestamp (in seconds) of when a government official, organization, or related agency last confirmed a particular user's, self-created profile. Even if a user were to update their profile afterwards, you could look at this timestamp, look at the state of the blockchain at that time, and conclude that the data contained in the block up to that timestamp has been confirmed.
 
+### How does a Multihash Work?
+
+* https://github.com/saurfang/ipfs-multihash-on-solidity
+
 ![Basic Types](images/basic_types.png)
 ![Integer Ranges](images/integer_ranges.png)
 ![Unsigned Integer Ranges](images/unsigned_integer_ranges.png)

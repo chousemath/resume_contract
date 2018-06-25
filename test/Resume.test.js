@@ -6,6 +6,7 @@ const mocha = require('mocha');
 const provider = ganache.provider();
 const web3 = new Web3(provider);
 const { interface, bytecode } = require('../compile');
+const multihash = require('./multihash');
 // require('events').EventEmitter.defaultMaxListeners = 50;
 
 let accounts;
@@ -22,21 +23,24 @@ beforeEach(async () => {
     arguments: []
   }).send({
     from: accounts[0],
-    gas: 4e6.toString()
+    gas: '6700000',
+    gasPrice: '2000000000'
   });
   resume2 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
     arguments: []
   }).send({
     from: accounts[1],
-    gas: 4e6.toString()
+    gas: '6700000',
+    gasPrice: '2000000000'
   });
   resume3 = await new web3.eth.Contract(JSON.parse(interface)).deploy({
     data: bytecode,
     arguments: []
   }).send({
     from: accounts[2],
-    gas: 4e6.toString()
+    gas: '6700000',
+    gasPrice: '2000000000'
   });
   resume.setProvider(provider);
 });
@@ -173,6 +177,16 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+  });
+
+  it('successfully updates a person\'s profile image', async () => {
+    const originalMultihash = 'QmT6ssjTDE9neaKqBDXGhfFdVcCuh5661iQC7RwPw3RNGj';
+    const newIpfsHash = multihash.getBytes32FromMultihash(originalMultihash);
+    await resume.methods.setProfileImage(newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
+      from: accounts[1]
+    });
+    const ipfsHash = await resume.methods.getProfileImage(accounts[1]).call();
+    assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
   });
 
   it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {

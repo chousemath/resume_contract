@@ -1,10 +1,22 @@
 pragma solidity ^0.4.17;
 
+/**
+ * @title ResumeDapp
+ * @author Joseph Sungpil Choi
+ * @dev Provides a system for users to upload their professional profile in a standardized,
+ * immutable way on the Ethereum blockchain
+ */
+
 contract Resume {
+    struct Multihash {
+        bytes32 digest;
+        uint8 hashFunction;
+        uint8 size;
+    }
     struct Document {
         string title;
         string description;
-        address document;
+        Multihash document;
     }
     struct Experience {
         string companyName; // official name of the company
@@ -29,7 +41,7 @@ contract Resume {
     mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
     mapping (address => bool) private ContractUsers; // keeps track of all users who have interacted with this contract
-    mapping (address => address) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
+    mapping (address => Multihash) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
 
     constructor() public { manager = msg.sender; }
 
@@ -43,8 +55,7 @@ contract Resume {
     }
 
     modifier authorized() {
-        address user = msg.sender;
-        require(user == manager || isCollaborator(user));
+        require(msg.sender == manager || isCollaborator(msg.sender));
         _;
     }
 
@@ -114,4 +125,18 @@ contract Resume {
     // set and retrieve the current position (job title) of the applicant
     function setPosition(string position) public recordUser { Positions[msg.sender] = position; }
     function getPosition(address sender) public view returns (string) { return Positions[sender]; }
+
+    // set and retrieve the current profile image of the applicant
+    function setProfileImage(bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Multihash memory ipfsHash = Multihash(_digest, _hashFunction, _size);
+        ProfileImages[msg.sender] = ipfsHash;
+    }
+    function getProfileImage(address sender) public view returns (bytes32 digest, uint8 hashFunction, uint8 size) {
+        Multihash storage ipfsHash = ProfileImages[sender];
+        return (ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
+    }
+    function deleteProfileImage(address sender) public {
+        require(ProfileImages[sender].digest != 0);
+        delete ProfileImages[sender];
+    }
 }
