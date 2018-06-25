@@ -117,6 +117,10 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deletePosition().send({ from: accounts[1] });
+    const positionAfterDelete = await resume.methods.getPosition(accounts[1]).call();
+    assert.equal(positionAfterDelete === position, false);
   });
 
   it('successfully updates a person\'s phone number', async () => {

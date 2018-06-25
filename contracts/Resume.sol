@@ -125,6 +125,7 @@ contract Resume {
     // set and retrieve the current position (job title) of the applicant
     function setPosition(string position) public recordUser { Positions[msg.sender] = position; }
     function getPosition(address sender) public view returns (string) { return Positions[sender]; }
+    function deletePosition() public recordUser { delete Positions[msg.sender]; }
 
     // set and retrieve the current profile image of the applicant
     function setProfileImage(bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
