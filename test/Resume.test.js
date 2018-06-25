@@ -77,7 +77,7 @@ describe('Resume', () => {
   it('successfully updates a person\'s name', async () => {
     const newName = 'Jay Park';
     const oldName = await resume.methods.getName(accounts[1]).call();
-    assert.equal(oldName === newName, false);
+    assert.notEqual(oldName, newName);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -87,27 +87,26 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteName().send({ from: accounts[1] });
+    const nameAfterDelete = await resume.methods.getName(accounts[1]).call();
+    assert.notEqual(nameAfterDelete, name);
   });
 
-  it('successfully updates a person\'s description', async () => {
-    const newDecription = 'At vero eos';
-    const oldDescription = await resume.methods.getDescription(accounts[1]).call();
-    assert.equal(oldDescription === newDecription, false);
-
-    const usersBefore = await resume.methods.getUsers().call();
-
-    await resume.methods.setDescription(newDecription).send({ from: accounts[1] });
+  it('successfully updates a person\'s profile description', async () => {
+    const originalMultihash = 'QmePw8gVcBMb8x6kAep6aMBAX23hCSk6iZW3i9VKkiFhu1';
+    const newDescription = multihash.getBytes32FromMultihash(originalMultihash);
+    await resume.methods.setDescription(newDescription.digest, newDescription.hashFunction, newDescription.size).send({
+      from: accounts[1]
+    });
     const description = await resume.methods.getDescription(accounts[1]).call();
-    assert.equal(description, newDecription);
-
-    const usersAfter = await resume.methods.getUsers().call();
-    assert.equal(usersAfter.length, usersBefore.length + 1);
+    assert.equal(multihash.getMultihashFromContractResponse(description), originalMultihash);
   });
 
   it('successfully updates a person\'s position', async () => {
     const newPosition = 'Senior Software Engineer';
     const oldPosition = await resume.methods.getPosition(accounts[1]).call();
-    assert.equal(oldPosition === newPosition, false);
+    assert.notEqual(oldPosition, newPosition);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -120,13 +119,13 @@ describe('Resume', () => {
 
     await resume.methods.deletePosition().send({ from: accounts[1] });
     const positionAfterDelete = await resume.methods.getPosition(accounts[1]).call();
-    assert.equal(positionAfterDelete === position, false);
+    assert.notEqual(positionAfterDelete, position);
   });
 
   it('successfully updates a person\'s phone number', async () => {
     const newPhone = '123456789';
     const oldPhone = await resume.methods.getPhone(accounts[1]).call();
-    assert.equal(oldPhone === newPhone, false);
+    assert.notEqual(oldPhone, newPhone);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -135,13 +134,18 @@ describe('Resume', () => {
     assert.equal(phone, newPhone);
 
     const usersAfter = await resume.methods.getUsers().call();
+
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deletePhone().send({ from: accounts[1] });
+    const phoneAfterDelete = await resume.methods.getPhone(accounts[1]).call();
+    assert.notEqual(phoneAfterDelete, phone);
   });
 
   it('successfully updates a person\'s email address', async () => {
     const newEmail = 'asdflkj@beepb00p.club';
     const oldEmail = await resume.methods.getEmail(accounts[1]).call();
-    assert.equal(oldEmail === newEmail, false);
+    assert.notEqual(oldEmail, newEmail);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -151,12 +155,35 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteEmail().send({ from: accounts[1] });
+    const emailAfterDelete = await resume.methods.getEmail(accounts[1]).call();
+    assert.notEqual(emailAfterDelete, email);
   });
+
+  // it('successfully updates a person\'s home address', async () => {
+  //   const newAddress = '1234 Potato Street, Meximan Town, CA, 31300';
+  //   const oldAddress = await resume.methods.getAddress(accounts[1]).call();
+  //   assert.notEqual(oldAddress, newAddress);
+
+  //   const usersBefore = await resume.methods.getUsers().call();
+
+  //   await resume.methods.setAddress(newAddress).send({ from: accounts[1] });
+  //   const address = await resume.methods.getAddress(accounts[1]).call();
+  //   assert.equal(address, newAddress);
+
+  //   const usersAfter = await resume.methods.getUsers().call();
+  //   assert.equal(usersAfter.length, usersBefore.length + 1);
+
+  //   await resume.methods.deleteAddress().send({ from: accounts[1] });
+  //   const addressAfterDelete = await resume.methods.getAddress(accounts[1]).call();
+  //   assert.notEqual(addressAfterDelete, address);
+  // });
 
   it('successfully updates a person\'s date of birth', async () => {
     const newDateOfBirth = new Date().getTime();
     const oldDateOfBirth = await resume.methods.getDateOfBirth(accounts[1]).call();
-    assert.equal(oldDateOfBirth === newDateOfBirth, false);
+    assert.notEqual(oldDateOfBirth, newDateOfBirth);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -166,12 +193,16 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteDateOfBirth().send({ from: accounts[1] });
+    const dateOfBirthAfterDelete = await resume.methods.getDateOfBirth(accounts[1]).call();
+    assert.notEqual(dateOfBirthAfterDelete, dateOfBirth);
   });
 
   it('successfully updates a person\'s gender', async () => {
     const newGender = 3;
     const oldGender = await resume.methods.getGender(accounts[1]).call();
-    assert.equal(oldGender === newGender, false);
+    assert.notEqual(oldGender, newGender);
 
     const usersBefore = await resume.methods.getUsers().call();
 
@@ -181,6 +212,10 @@ describe('Resume', () => {
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
+
+    await resume.methods.deleteGender().send({ from: accounts[1] });
+    const genderAfterDelete = await resume.methods.getGender(accounts[1]).call();
+    assert.notEqual(genderAfterDelete, gender);
   });
 
   it('successfully updates a person\'s profile image', async () => {
