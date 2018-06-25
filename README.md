@@ -4,6 +4,10 @@
 * Strings are considered dynamic arrays in Solidity, because we are unable to retrieve nested arrays through web3, that means we are unable to fetch arrays of strings through web3
 * This contract uses IPFS for all document and image storage
 
+### What is a `confirmation date`?
+
+* A confirmation date is a unix timestamp (in seconds) of when a government official, organization, or related agency last confirmed a particular user's, self-created profile. Even if a user were to update their profile afterwards, you could look at this timestamp, look at the state of the blockchain at that time, and conclude that the data contained in the block up to that timestamp has been confirmed.
+
 ![Basic Types](images/basic_types.png)
 ![Integer Ranges](images/integer_ranges.png)
 ![Unsigned Integer Ranges](images/unsigned_integer_ranges.png)
