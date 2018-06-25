@@ -33,8 +33,8 @@ contract Resume {
     mapping (address => bytes32) private Positions; // current job held by applicant
 
     mapping (address => bytes32) private AddressStreets; // full home street address
-    mapping (address => uint32) private AddressCities; // full home city (use integer code of city)
-    mapping (address => uint32) private AddressRegions; // full home state/region (use integer code of region)
+    mapping (address => uint32) private AddressCities; // full home city (use integer code of city, 0: Seoul)
+    mapping (address => uint32) private AddressRegions; // full home state/region (use integer code of region, 0: 서초구)
     mapping (address => uint32) private AddressZipcodes; // full home zipcode
 
     mapping (address => bytes32) private PhoneNumbers; // preferably mobile phone number
