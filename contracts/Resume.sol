@@ -25,7 +25,8 @@ contract Resume {
     mapping (address => string) private Addresses; // full home address
     mapping (address => string) private PhoneNumbers; // preferably mobile phone number
     mapping (address => string) private Emails; // email addresses
-    mapping (address => uint256) private DatesOfBirth; // unix timestamps
+    mapping (address => uint256) private DatesOfBirth; // unix timestamps in seconds
+    mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
     mapping (address => bool) private ContractUsers; // keeps track of all users who have interacted with this contract
     mapping (address => address) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
@@ -38,6 +39,12 @@ contract Resume {
     // to the total list of users
     modifier recordUser() {
         addContractUser(msg.sender);
+        _;
+    }
+
+    modifier authorized() {
+        address user = msg.sender;
+        require(user == manager || isCollaborator(user));
         _;
     }
 
@@ -57,6 +64,11 @@ contract Resume {
     function isCollaborator(address _collaborator) public view returns (bool) {
         return Collaborators[_collaborator];
     }
+
+    // Allows managers and collaborators to mark when they have confirmed that an applicant's
+    // self-created profile has been validated (by some government agency or organization)
+    function setConfirmationDate(address applicant) public authorized { ConfirmationDates[applicant] = now; }
+    function getConfirmationDate(address applicant) public view returns (uint256) { return ConfirmationDates[applicant]; }
 
     // Keep a running list of all applicants who have submitted their personal data
     // to the blockchain

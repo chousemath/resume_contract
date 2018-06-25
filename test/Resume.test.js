@@ -174,4 +174,12 @@ describe('Resume', () => {
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
   });
+
+  it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {
+    await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[0] });
+    const confirmedAt = await resume.methods.getConfirmationDate(accounts[3]).call();
+    const now = Math.floor(Date.now() / 1000);
+    console.log(confirmedAt, now);
+    assert.equal(confirmedAt > (now - 120) && confirmedAt <= now, true);
+  });
 });
