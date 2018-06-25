@@ -1,13 +1,18 @@
 pragma solidity ^0.4.17;
 
 contract Resume {
+    struct Document {
+        string title;
+        string description;
+        address document;
+    }
     struct Experience {
         string companyName; // official name of the company
         string companyAddress; // official address of the company
         string position; // the position the applicant held
         uint256 startDate; // when this job began
         uint256 endDate; // when this job ended
-        address document; // IPFS document related to this experience
+        Document document; // IPFS document related to this experience
     }
 
     address public manager;
