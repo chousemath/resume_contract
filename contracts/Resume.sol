@@ -210,6 +210,26 @@ contract Resume {
         delete Documents2[sender];
     }
 
+    // set, retrieve, and delete documents for the applicant
+    function addDocument3(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        Documents3[msg.sender] = document;
+    }
+    function getDocument3(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
+        return (
+            Documents3[sender].title,
+            Documents3[sender].document.digest,
+            Documents3[sender].document.hashFunction,
+            Documents3[sender].document.size
+        );
+    }
+    function deleteDocument3(address sender) public {
+        require(Documents3[sender].document.digest != 0);
+        delete Documents3[sender];
+    }
+
 
     // struct Experience {
     //     bytes32 companyName; // official name of the company
