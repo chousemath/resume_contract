@@ -170,32 +170,16 @@ contract Resume {
         delete ProfileImages[sender];
     }
 
-    modifier initializeDocument(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
-        _;
-    }
-
     // set, retrieve, and delete documents for the applicant
-    function addDocument1(
-        bytes32 title,
-        bytes32 _digest,
-        uint8 _hashFunction,
-        uint8 _size
-    ) public initializeDocument(title, _digest, _hashFunction, _size) {
+    function addDocument1(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
         Document memory document;
         document.document = Multihash(_digest, _hashFunction, _size);
         document.title = title;
         Documents1[msg.sender] = document;
     }
     function getDocument1(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
-        return (
-            Documents1[sender].title,
-            Documents1[sender].document.digest,
-            Documents1[sender].document.hashFunction,
-            Documents1[sender].document.size
-        );
+        Document storage doc = Documents1[sender];
+        return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
     function deleteDocument1(address sender) public {
         require(Documents1[sender].document.digest != 0);
@@ -210,12 +194,8 @@ contract Resume {
         Documents2[msg.sender] = document;
     }
     function getDocument2(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
-        return (
-            Documents2[sender].title,
-            Documents2[sender].document.digest,
-            Documents2[sender].document.hashFunction,
-            Documents2[sender].document.size
-        );
+        Document storage doc = Documents2[sender];
+        return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
     function deleteDocument2(address sender) public {
         require(Documents2[sender].document.digest != 0);
@@ -230,24 +210,45 @@ contract Resume {
         Documents3[msg.sender] = document;
     }
     function getDocument3(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
-        return (
-            Documents3[sender].title,
-            Documents3[sender].document.digest,
-            Documents3[sender].document.hashFunction,
-            Documents3[sender].document.size
-        );
+        Document storage doc = Documents3[sender];
+        return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
     function deleteDocument3(address sender) public {
         require(Documents3[sender].document.digest != 0);
         delete Documents3[sender];
     }
 
+    // set, retrieve, and delete documents for the applicant
+    function addDocument4(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        Documents4[msg.sender] = document;
+    }
+    function getDocument4(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
+        Document storage doc = Documents4[sender];
+        return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
+    }
 
-    // struct Experience {
-    //     bytes32 companyName; // official name of the company
-    //     bytes32 position; // the position the applicant held
-    //     uint256 startDate; // when this job began
-    //     uint256 endDate; // when this job ended
-    //     Document document; // IPFS document related to this experience
-    // }
+    function deleteDocument4(address sender) public {
+        require(Documents4[sender].document.digest != 0);
+        delete Documents4[sender];
+    }
+
+    // set, retrieve, and delete documents for the applicant
+    function addDocument5(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        Documents5[msg.sender] = document;
+    }
+    function getDocument5(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
+        Document storage doc = Documents5[sender];
+        return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
+    }
+
+    function deleteDocument5(address sender) public {
+        require(Documents5[sender].document.digest != 0);
+        delete Documents5[sender];
+    }
 }
