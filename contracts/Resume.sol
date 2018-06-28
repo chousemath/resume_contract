@@ -170,8 +170,20 @@ contract Resume {
         delete ProfileImages[sender];
     }
 
+    modifier initializeDocument(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        _;
+    }
+
     // set, retrieve, and delete documents for the applicant
-    function addDocument1(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+    function addDocument1(
+        bytes32 title,
+        bytes32 _digest,
+        uint8 _hashFunction,
+        uint8 _size
+    ) public initializeDocument(title, _digest, _hashFunction, _size) {
         Document memory document;
         document.document = Multihash(_digest, _hashFunction, _size);
         document.title = title;
