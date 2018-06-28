@@ -289,6 +289,42 @@ describe('Resume', () => {
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
   });
 
+  it('successfully uploads a person\'s document', async () => {
+    const originalMultihash = 'QmT6ssjTDE9neaKqBDXGhfFdVcCuh5661iQC7RwPw3RNGj';
+    const newIpfsHash = multihash.getBytes32FromMultihash(originalMultihash);
+    const originalTitle = 'My Document V1';
+    const title = web3.utils.utf8ToHex(originalTitle);
+    await resume.methods.addDocument1(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
+      from: accounts[1]
+    });
+    const ipfsHash = await resume.methods.getDocument1(accounts[1]).call();
+    assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
+    assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
+
+    await resume.methods.deleteDocument1(accounts[1]).send({ from: accounts[1] });
+    const ipfsHashAfterDelete = await resume.methods.getDocument1(accounts[1]).call();
+    assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
+    assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
+  });
+
+  it('successfully uploads a person\'s document 2', async () => {
+    const originalMultihash = 'QmT6ssjTDE9neaKqBDXGhfFdVcCuh5661iQC7RwPw3RNGj';
+    const newIpfsHash = multihash.getBytes32FromMultihash(originalMultihash);
+    const originalTitle = 'My Document V1';
+    const title = web3.utils.utf8ToHex(originalTitle);
+    await resume.methods.addDocument2(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
+      from: accounts[1]
+    });
+    const ipfsHash = await resume.methods.getDocument2(accounts[1]).call();
+    assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
+    assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
+
+    await resume.methods.deleteDocument2(accounts[1]).send({ from: accounts[1] });
+    const ipfsHashAfterDelete = await resume.methods.getDocument2(accounts[1]).call();
+    assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
+    assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
+  });
+
   it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {
     // a non-manager/non-collaborator should not be able to set a confirmation date
     try {

@@ -43,7 +43,16 @@ contract Resume {
     mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
     mapping (address => bool) private ContractUsers; // keeps track of all users who have interacted with this contract
+    
     mapping (address => Multihash) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
+    
+    mapping (address => Document) private Documents1; // documents that the applicant wants to share
+    mapping (address => Document) private Documents2; // documents that the applicant wants to share
+    mapping (address => Document) private Documents3; // documents that the applicant wants to share
+    mapping (address => Document) private Documents4; // documents that the applicant wants to share
+    mapping (address => Document) private Documents5; // documents that the applicant wants to share
+
+    mapping (address => Experience) private Experiences1;
 
     constructor() public { manager = msg.sender; }
 
@@ -160,4 +169,53 @@ contract Resume {
         require(ProfileImages[sender].digest != 0);
         delete ProfileImages[sender];
     }
+
+    // set, retrieve, and delete documents for the applicant
+    function addDocument1(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        Documents1[msg.sender] = document;
+    }
+    function getDocument1(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
+        return (
+            Documents1[sender].title,
+            Documents1[sender].document.digest,
+            Documents1[sender].document.hashFunction,
+            Documents1[sender].document.size
+        );
+    }
+    function deleteDocument1(address sender) public {
+        require(Documents1[sender].document.digest != 0);
+        delete Documents1[sender];
+    }
+
+    // set, retrieve, and delete documents for the applicant
+    function addDocument2(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
+        Document memory document;
+        document.document = Multihash(_digest, _hashFunction, _size);
+        document.title = title;
+        Documents2[msg.sender] = document;
+    }
+    function getDocument2(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
+        return (
+            Documents2[sender].title,
+            Documents2[sender].document.digest,
+            Documents2[sender].document.hashFunction,
+            Documents2[sender].document.size
+        );
+    }
+    function deleteDocument2(address sender) public {
+        require(Documents2[sender].document.digest != 0);
+        delete Documents2[sender];
+    }
+
+
+    // struct Experience {
+    //     bytes32 companyName; // official name of the company
+    //     bytes32 position; // the position the applicant held
+    //     uint256 startDate; // when this job began
+    //     uint256 endDate; // when this job ended
+    //     Document document; // IPFS document related to this experience
+    // }
 }
