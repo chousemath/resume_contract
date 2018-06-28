@@ -22,3 +22,9 @@
 ![Reference Types](images/reference_types.png)
 ![MSG](images/msg.png)
 
+### Things to research
+
+* Lightning network
+* Raiden
+* Plasma
+
