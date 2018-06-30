@@ -63,8 +63,10 @@ contract Resume {
 
     // make sure that whenever a user update his or her own record, to add that user
     // to the total list of users
+    // Keep a running list of all applicants who have submitted their personal data
+    // to the blockchain
     modifier recordUser() {
-        addContractUser(msg.sender);
+        users.push(msg.sender);
         _;
     }
 
@@ -94,16 +96,6 @@ contract Resume {
     // self-created profile has been validated (by some government agency or organization)
     function setConfirmationDate(address applicant) public authorized { ConfirmationDates[applicant] = now; }
     function getConfirmationDate(address applicant) public view returns (uint256) { return ConfirmationDates[applicant]; }
-
-    // Keep a running list of all applicants who have submitted their personal data
-    // to the blockchain
-    function addContractUser(address sender) private {
-        require(!isContractUser(sender));
-        users.push(sender);
-    }
-    function isContractUser(address sender) private view returns (bool) {
-        return ContractUsers[sender];
-    }
 
     // The following functions are to be used mostly by regular citizen who
     // want to update their profile

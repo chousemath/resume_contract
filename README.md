@@ -17,6 +17,11 @@
 
 > The EVM has a word-size of 32 bytes, so it is "optimized" for dealing with data in chunks of 32 bytes. (Compilers, such as Solidity, have to do more work and generate more bytecode when data isn't in chunks of 32 bytes, which effectively leads to higher gas cost.)
 
+### Notes on Solidity mappings
+
+* Keys are not stored in solidity mappings, we work with hash tables in Solidity, the key is first hashed using a hash function, and that hash is mapped to a predefined index value, which is then mapped to the actual value
+* In mappings, values are not iterable
+
 ### Operational Notes
 
 * When deployed to the Rinkeby test network, each transaction takes roughly 15~30 seconds to execute, need to make sure that the UI has elements in place to let the user know that the transaction is in progress
@@ -26,6 +31,7 @@
 ![Unsigned Integer Ranges](images/unsigned_integer_ranges.png)
 ![Reference Types](images/reference_types.png)
 ![MSG](images/msg.png)
+![How Mappings Work](images/how_mappings_work.png)
 
 ### Things to research
 
