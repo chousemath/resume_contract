@@ -17,6 +17,10 @@
 
 > The EVM has a word-size of 32 bytes, so it is "optimized" for dealing with data in chunks of 32 bytes. (Compilers, such as Solidity, have to do more work and generate more bytecode when data isn't in chunks of 32 bytes, which effectively leads to higher gas cost.)
 
+### Operational Notes
+
+* When deployed to the Rinkeby test network, each transaction takes roughly 15~30 seconds to execute, need to make sure that the UI has elements in place to let the user know that the transaction is in progress
+
 ![Basic Types](images/basic_types.png)
 ![Integer Ranges](images/integer_ranges.png)
 ![Unsigned Integer Ranges](images/unsigned_integer_ranges.png)

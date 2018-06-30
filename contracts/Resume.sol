@@ -28,6 +28,9 @@ contract Resume {
     address public manager;
     address[] public users;
 
+    // A collaborator is anyone who has been designated by the manager
+    // to be able to review the profile of an applicant
+    // Collaborators have the ability to add other collaborators
     mapping (address => bool) private Collaborators;
     mapping (address => bytes32) private Names; // full name of the applicant
     mapping (address => bytes32) private Positions; // current job held by applicant
