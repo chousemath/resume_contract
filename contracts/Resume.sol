@@ -45,7 +45,6 @@ contract Resume {
     mapping (address => uint256) private DatesOfBirth; // unix timestamps in seconds
     mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
-    mapping (address => bool) private ContractUsers; // keeps track of all users who have interacted with this contract
     
     mapping (address => Multihash) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
     

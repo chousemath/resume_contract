@@ -21,6 +21,7 @@
 
 * Keys are not stored in solidity mappings, we work with hash tables in Solidity, the key is first hashed using a hash function, and that hash is mapped to a predefined index value, which is then mapped to the actual value
 * In mappings, values are not iterable
+* A mapping is a reference type, and thus if there is a mapping in a struct definition, we do not have to initialize that mapping when we initialize that struct
 
 ### Operational Notes
 
