@@ -62,7 +62,7 @@ describe('Resume', () => {
   it('successfully adds a collaborator if manager or a collaborator', async () => {
     // a non-collaborator trying to add a new collaborator should throw an error
     try {
-      await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1] });
+      await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1], gas: 1000000 });
       assert(false);
     } catch (err) {
       assert(err);
@@ -71,13 +71,13 @@ describe('Resume', () => {
     const collaboratorStatus = await resume.methods.isCollaborator(accounts[1]).call();
     assert.equal(collaboratorStatus, false);
     // test to make sure that the contract manager can add a collaborator
-    await resume.methods.addCollaborator(accounts[1]).send({ from: accounts[0] });
+    await resume.methods.addCollaborator(accounts[1]).send({ from: accounts[0], gas: 1000000 });
     const collaboratorStatus2 = await resume.methods.isCollaborator(accounts[1]).call();
     assert.equal(collaboratorStatus2, true);
     const collaboratorStatus3 = await resume.methods.isCollaborator(accounts[2]).call();
     assert.equal(collaboratorStatus3, false);
     // test to make sure that a collaborator can add another collaborator
-    await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1] });
+    await resume.methods.addCollaborator(accounts[2]).send({ from: accounts[1], gas: 1000000 });
     const collaboratorStatus4 = await resume.methods.isCollaborator(accounts[2]).call();
     assert.equal(collaboratorStatus4, true);
   });
@@ -90,16 +90,28 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setName(newNameBytes32).send({ from: accounts[1] });
+    await resume.methods.setName(newNameBytes32).send({ from: accounts[1], gas: 1000000 });
     const name = await resume.methods.getName(accounts[1]).call();
     assert.equal(name, web3.utils.padRight(newNameBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteName().send({ from: accounts[1] });
+    await resume.methods.deleteName().send({ from: accounts[1], gas: 1000000 });
     const nameAfterDelete = await resume.methods.getName(accounts[1]).call();
     assert.notEqual(nameAfterDelete, name);
+  });
+
+  it('only adds a user\'s address to the list of users if first time user', async () => {
+    const newName = 'Jay Park The Third';
+    const newNameBytes32 = web3.utils.utf8ToHex(newName);
+    const usersBefore = await resume.methods.getUsers().call();
+    await resume.methods.setName(newNameBytes32).send({ from: accounts[1], gas: 1000000 });
+    const usersAfter = await resume.methods.getUsers().call();
+    assert.equal(usersAfter.length, usersBefore.length + 1);
+    await resume.methods.setName(newNameBytes32).send({ from: accounts[1], gas: 1000000 });
+    const usersAfter2 = await resume.methods.getUsers().call();
+    assert.equal(usersAfter2.length, usersAfter.length);
   });
 
   it('successfully updates a person\'s position', async () => {
@@ -110,14 +122,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setPosition(newPositionBytes32).send({ from: accounts[1] });
+    await resume.methods.setPosition(newPositionBytes32).send({ from: accounts[1], gas: 1000000 });
     const position = await resume.methods.getPosition(accounts[1]).call();
     assert.equal(position, web3.utils.padRight(newPositionBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deletePosition().send({ from: accounts[1] });
+    await resume.methods.deletePosition().send({ from: accounts[1], gas: 1000000 });
     const positionAfterDelete = await resume.methods.getPosition(accounts[1]).call();
     assert.notEqual(positionAfterDelete, position);
   });
@@ -130,7 +142,7 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setPhone(newPhoneBytes32).send({ from: accounts[1] });
+    await resume.methods.setPhone(newPhoneBytes32).send({ from: accounts[1], gas: 1000000 });
     const phone = await resume.methods.getPhone(accounts[1]).call();
     assert.equal(phone, web3.utils.padRight(newPhoneBytes32, 64));
 
@@ -138,7 +150,7 @@ describe('Resume', () => {
 
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deletePhone().send({ from: accounts[1] });
+    await resume.methods.deletePhone().send({ from: accounts[1], gas: 1000000 });
     const phoneAfterDelete = await resume.methods.getPhone(accounts[1]).call();
     assert.notEqual(phoneAfterDelete, phone);
   });
@@ -151,14 +163,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setEmail(newEmailBytes32).send({ from: accounts[1] });
+    await resume.methods.setEmail(newEmailBytes32).send({ from: accounts[1], gas: 1000000 });
     const email = await resume.methods.getEmail(accounts[1]).call();
     assert.equal(email, web3.utils.padRight(newEmailBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteEmail().send({ from: accounts[1] });
+    await resume.methods.deleteEmail().send({ from: accounts[1], gas: 1000000 });
     const emailAfterDelete = await resume.methods.getEmail(accounts[1]).call();
     assert.notEqual(emailAfterDelete, email);
   });
@@ -172,14 +184,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setAddressStreet(newAddressBytes32).send({ from: accounts[1] });
+    await resume.methods.setAddressStreet(newAddressBytes32).send({ from: accounts[1], gas: 1000000 });
     const address = await resume.methods.getAddressStreet(accounts[1]).call();
     assert.equal(address, web3.utils.padRight(newAddressBytes32, 64));
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteAddressStreet().send({ from: accounts[1] });
+    await resume.methods.deleteAddressStreet().send({ from: accounts[1], gas: 1000000 });
     const addressAfterDelete = await resume.methods.getAddressStreet(accounts[1]).call();
     assert.notEqual(addressAfterDelete, address);
   });
@@ -191,14 +203,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setAddressCity(newAddress).send({ from: accounts[1] });
+    await resume.methods.setAddressCity(newAddress).send({ from: accounts[1], gas: 1000000 });
     const address = await resume.methods.getAddressCity(accounts[1]).call();
     assert.equal(address, newAddress);
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteAddressCity().send({ from: accounts[1] });
+    await resume.methods.deleteAddressCity().send({ from: accounts[1], gas: 1000000 });
     const addressAfterDelete = await resume.methods.getAddressCity(accounts[1]).call();
     assert.notEqual(addressAfterDelete, address);
   });
@@ -210,14 +222,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setAddressRegion(newAddress).send({ from: accounts[1] });
+    await resume.methods.setAddressRegion(newAddress).send({ from: accounts[1], gas: 1000000 });
     const address = await resume.methods.getAddressRegion(accounts[1]).call();
     assert.equal(address, newAddress);
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteAddressRegion().send({ from: accounts[1] });
+    await resume.methods.deleteAddressRegion().send({ from: accounts[1], gas: 1000000 });
     const addressAfterDelete = await resume.methods.getAddressRegion(accounts[1]).call();
     assert.notEqual(addressAfterDelete, address);
   });
@@ -229,14 +241,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setAddressZipcode(newAddress).send({ from: accounts[1] });
+    await resume.methods.setAddressZipcode(newAddress).send({ from: accounts[1], gas: 1000000 });
     const address = await resume.methods.getAddressZipcode(accounts[1]).call();
     assert.equal(address, newAddress);
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteAddressRegion().send({ from: accounts[1] });
+    await resume.methods.deleteAddressRegion().send({ from: accounts[1], gas: 1000000 });
     const addressAfterDelete = await resume.methods.getAddressRegion(accounts[1]).call();
     assert.notEqual(addressAfterDelete, address);
   });
@@ -248,14 +260,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setDateOfBirth(newDateOfBirth).send({ from: accounts[1] });
+    await resume.methods.setDateOfBirth(newDateOfBirth).send({ from: accounts[1], gas: 1000000 });
     const dateOfBirth = await resume.methods.getDateOfBirth(accounts[1]).call();
     assert.equal(dateOfBirth, newDateOfBirth);
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteDateOfBirth().send({ from: accounts[1] });
+    await resume.methods.deleteDateOfBirth().send({ from: accounts[1], gas: 1000000 });
     const dateOfBirthAfterDelete = await resume.methods.getDateOfBirth(accounts[1]).call();
     assert.notEqual(dateOfBirthAfterDelete, dateOfBirth);
   });
@@ -267,14 +279,14 @@ describe('Resume', () => {
 
     const usersBefore = await resume.methods.getUsers().call();
 
-    await resume.methods.setGender(newGender).send({ from: accounts[1] });
+    await resume.methods.setGender(newGender).send({ from: accounts[1], gas: 1000000 });
     const gender = await resume.methods.getGender(accounts[1]).call();
     assert.equal(gender, newGender);
 
     const usersAfter = await resume.methods.getUsers().call();
     assert.equal(usersAfter.length, usersBefore.length + 1);
 
-    await resume.methods.deleteGender().send({ from: accounts[1] });
+    await resume.methods.deleteGender().send({ from: accounts[1], gas: 1000000 });
     const genderAfterDelete = await resume.methods.getGender(accounts[1]).call();
     assert.notEqual(genderAfterDelete, gender);
   });
@@ -283,7 +295,7 @@ describe('Resume', () => {
     const originalMultihash = 'QmT6ssjTDE9neaKqBDXGhfFdVcCuh5661iQC7RwPw3RNGj';
     const newIpfsHash = multihash.getBytes32FromMultihash(originalMultihash);
     await resume.methods.setProfileImage(newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
-      from: accounts[1]
+      from: accounts[1], gas: 1000000
     });
     const ipfsHash = await resume.methods.getProfileImage(accounts[1]).call();
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
@@ -295,13 +307,13 @@ describe('Resume', () => {
     const originalTitle = 'My Document V1';
     const title = web3.utils.utf8ToHex(originalTitle);
     await resume.methods.addDocument1(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
-      from: accounts[1]
+      from: accounts[1], gas: 1000000
     });
     const ipfsHash = await resume.methods.getDocument1(accounts[1]).call();
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument1(accounts[1]).send({ from: accounts[1] });
+    await resume.methods.deleteDocument1(accounts[1]).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument1(accounts[1]).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -313,13 +325,13 @@ describe('Resume', () => {
     const originalTitle = 'My Document V1';
     const title = web3.utils.utf8ToHex(originalTitle);
     await resume.methods.addDocument2(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
-      from: accounts[1]
+      from: accounts[1], gas: 1000000
     });
     const ipfsHash = await resume.methods.getDocument2(accounts[1]).call();
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument2(accounts[1]).send({ from: accounts[1] });
+    await resume.methods.deleteDocument2(accounts[1]).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument2(accounts[1]).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -331,13 +343,13 @@ describe('Resume', () => {
     const originalTitle = 'My Document V1';
     const title = web3.utils.utf8ToHex(originalTitle);
     await resume.methods.addDocument3(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
-      from: accounts[1]
+      from: accounts[1], gas: 1000000
     });
     const ipfsHash = await resume.methods.getDocument3(accounts[1]).call();
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument3(accounts[1]).send({ from: accounts[1] });
+    await resume.methods.deleteDocument3(accounts[1]).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument3(accounts[1]).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -355,7 +367,7 @@ describe('Resume', () => {
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument4(accounts[1]).send({ from: accounts[1] });
+    await resume.methods.deleteDocument4(accounts[1]).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument4(accounts[1]).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -373,7 +385,7 @@ describe('Resume', () => {
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument5(accounts[1]).send({ from: accounts[1] });
+    await resume.methods.deleteDocument5(accounts[1]).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument5(accounts[1]).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -382,12 +394,12 @@ describe('Resume', () => {
   it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {
     // a non-manager/non-collaborator should not be able to set a confirmation date
     try {
-      await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[1] });
+      await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[1], gas: 1000000 });
       assert(false);
     } catch (err) {
       assert(err);
     }
-    await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[0] });
+    await resume.methods.setConfirmationDate(accounts[3]).send({ from: accounts[0], gas: 1000000 });
     const confirmedAt = await resume.methods.getConfirmationDate(accounts[3]).call();
     const now = Math.floor(Date.now() / 1000);
     console.log(confirmedAt, now);

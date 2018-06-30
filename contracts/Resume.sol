@@ -32,6 +32,7 @@ contract Resume {
     // to be able to review the profile of an applicant
     // Collaborators have the ability to add other collaborators
     mapping (address => bool) private Collaborators;
+    mapping (address => bool) private Participants;
     mapping (address => bytes32) private Names; // full name of the applicant
     mapping (address => bytes32) private Positions; // current job held by applicant
 
@@ -45,7 +46,7 @@ contract Resume {
     mapping (address => uint256) private DatesOfBirth; // unix timestamps in seconds
     mapping (address => uint256) private ConfirmationDates; // timestamp (in seconds) of when gov agent last confirmed applicant
     mapping (address => uint8) private Genders; // applicant's sex, 0: unspecified, 1: male, 2: female, 3: other
-    
+    mapping (address => uint256) private UpdateDates; // unix timestamps in seconds of when the user last update his/her profile    
     mapping (address => Multihash) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
     
     mapping (address => Document) private Documents1; // documents that the applicant wants to share
@@ -65,13 +66,21 @@ contract Resume {
     // Keep a running list of all applicants who have submitted their personal data
     // to the blockchain
     modifier recordUser() {
-        users.push(msg.sender);
+        UpdateDates[msg.sender] = now;
+        if (!Participants[msg.sender]) {
+            Participants[msg.sender] = true;
+            users.push(msg.sender);
+        }
         _;
     }
 
     modifier authorized() {
         require(msg.sender == manager || isCollaborator(msg.sender));
         _;
+    }
+
+    function getUpdateDate(address sender) public view returns(uint256) {
+        return UpdateDates[sender];
     }
 
     // a collaborator basically has near-admin capabilities, this should let the
