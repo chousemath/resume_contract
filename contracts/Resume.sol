@@ -161,11 +161,10 @@ contract Resume {
 
     // set and retrieve the current profile image of the applicant
     function setProfileImage(bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Multihash memory ipfsHash = Multihash(_digest, _hashFunction, _size);
-        ProfileImages[msg.sender] = ipfsHash;
+        ProfileImages[msg.sender] = Multihash({digest: _digest, hashFunction: _hashFunction, size: _size});
     }
     function getProfileImage(address sender) public view returns (bytes32 digest, uint8 hashFunction, uint8 size) {
-        Multihash storage ipfsHash = ProfileImages[sender];
+        Multihash memory ipfsHash = ProfileImages[sender];
         return (ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
     }
     function deleteProfileImage(address sender) public {
@@ -175,11 +174,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument1(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document = Document({
+        Documents1[msg.sender] = Document({
             title: title,
-            document: Multihash(_digest, _hashFunction, _size)
+            document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         });
-        Documents1[msg.sender] = document;
     }
     function getDocument1(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents1[sender];
@@ -192,11 +190,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument2(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document = Document({
+        Documents2[msg.sender] = Document({
             title: title,
-            document: Multihash(_digest, _hashFunction, _size)
+            document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         });
-        Documents2[msg.sender] = document;
     }
     function getDocument2(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents2[sender];
@@ -209,11 +206,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument3(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document = Document({
+        Documents3[msg.sender] = Document({
             title: title,
-            document: Multihash(_digest, _hashFunction, _size)
+            document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         });
-        Documents3[msg.sender] = document;
     }
     function getDocument3(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents3[sender];
@@ -226,11 +222,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument4(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document = Document({
+        Documents4[msg.sender] = Document({
             title: title,
-            document: Multihash(_digest, _hashFunction, _size)
+            document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         });
-        Documents4[msg.sender] = document;
     }
     function getDocument4(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents4[sender];
@@ -243,11 +238,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument5(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document = Document({
+        Documents5[msg.sender] = Document({
             title: title,
-            document: Multihash(_digest, _hashFunction, _size)
+            document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         });
-        Documents5[msg.sender] = document;
     }
     function getDocument5(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents5[sender];
