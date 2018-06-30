@@ -164,7 +164,7 @@ contract Resume {
         ProfileImages[msg.sender] = Multihash({digest: _digest, hashFunction: _hashFunction, size: _size});
     }
     function getProfileImage(address sender) public view returns (bytes32 digest, uint8 hashFunction, uint8 size) {
-        Multihash memory ipfsHash = ProfileImages[sender];
+        Multihash storage ipfsHash = ProfileImages[sender];
         return (ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
     }
     function deleteProfileImage(address sender) public {
