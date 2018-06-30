@@ -175,9 +175,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument1(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
+        Document memory document = Document({
+            title: title,
+            document: Multihash(_digest, _hashFunction, _size)
+        });
         Documents1[msg.sender] = document;
     }
     function getDocument1(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
@@ -191,9 +192,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument2(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
+        Document memory document = Document({
+            title: title,
+            document: Multihash(_digest, _hashFunction, _size)
+        });
         Documents2[msg.sender] = document;
     }
     function getDocument2(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
@@ -207,9 +209,10 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument3(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
+        Document memory document = Document({
+            title: title,
+            document: Multihash(_digest, _hashFunction, _size)
+        });
         Documents3[msg.sender] = document;
     }
     function getDocument3(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
@@ -223,16 +226,16 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument4(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
+        Document memory document = Document({
+            title: title,
+            document: Multihash(_digest, _hashFunction, _size)
+        });
         Documents4[msg.sender] = document;
     }
     function getDocument4(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents4[sender];
         return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
-
     function deleteDocument4(address sender) public {
         require(Documents4[sender].document.digest != 0);
         delete Documents4[sender];
@@ -240,16 +243,16 @@ contract Resume {
 
     // set, retrieve, and delete documents for the applicant
     function addDocument5(bytes32 title, bytes32 _digest, uint8 _hashFunction, uint8 _size) public {
-        Document memory document;
-        document.document = Multihash(_digest, _hashFunction, _size);
-        document.title = title;
+        Document memory document = Document({
+            title: title,
+            document: Multihash(_digest, _hashFunction, _size)
+        });
         Documents5[msg.sender] = document;
     }
     function getDocument5(address sender) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents5[sender];
         return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
-
     function deleteDocument5(address sender) public {
         require(Documents5[sender].document.digest != 0);
         delete Documents5[sender];
