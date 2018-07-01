@@ -49,8 +49,9 @@ contract Resume {
     mapping (address => Multihash) private ProfileImages; // applicant's profile image (stored on IPFS), should they choose to upload it
     
     mapping (address => Document[]) private Documents; // documents that the applicant wants to share
-
+    mapping (address => uint16) private DocumentCounts; // number of documents each user has uploaded
     mapping (address => Experience[]) private Experiences;
+    mapping (address => uint16) private ExperienceCounts; // number of experiences each user has uploaded
 
     constructor() public { manager = msg.sender; }
 
@@ -173,6 +174,7 @@ contract Resume {
             title: title,
             document: Multihash({digest: _digest, hashFunction: _hashFunction, size: _size})
         }));
+        DocumentCounts[msg.sender]++;
     }
     function getDocument(address sender, uint16 index) public view returns(bytes32 title, bytes32 digest, uint8 hashFunction, uint8 size) {
         Document storage doc = Documents[sender][index];
@@ -182,6 +184,9 @@ contract Resume {
         require(Documents[sender][index].document.digest != 0);
         delete Documents[sender][index];
     }
+    function getDocumentCount(address sender) public view returns(uint16) {
+        return DocumentCounts[sender];
+    }
 
     function addExperience(bytes32 companyName, bytes32 position, uint256 startDate, uint256 endDate) public recordUser {
         Experiences[msg.sender].push(Experience({
@@ -190,6 +195,7 @@ contract Resume {
             startDate: startDate,
             endDate: endDate
         }));
+        ExperienceCounts[msg.sender]++;
     }
     function getExperience(address sender, uint16 index) public view returns(
         bytes32 companyName,
@@ -203,5 +209,8 @@ contract Resume {
     function deleteExperience(address sender, uint16 index) public {
         require(Experiences[sender][index].startDate != 0);
         delete Experiences[sender][index];
+    }
+    function getExperienceCount(address sender) public view returns(uint16) {
+        return ExperienceCounts[sender];
     }
 }

@@ -276,10 +276,13 @@ describe('Resume', () => {
     const newIpfsHash = multihash.getBytes32FromMultihash(originalMultihash);
     const originalTitle = 'My Document V1';
     const title = web3.utils.utf8ToHex(originalTitle);
+    const documentCountBefore = parseInt(await resume.methods.getDocumentCount(accounts[1]).call());
     await resume.methods.addDocument(title, newIpfsHash.digest, newIpfsHash.hashFunction, newIpfsHash.size).send({
       from: accounts[1],
       gas: 1000000
     });
+    const documentCountAfter = parseInt(await resume.methods.getDocumentCount(accounts[1]).call());
+    assert.equal(documentCountAfter, documentCountBefore + 1);
     const ipfsHash = await resume.methods.getDocument(accounts[1], 0).call();
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
@@ -297,10 +300,13 @@ describe('Resume', () => {
     const position = web3.utils.utf8ToHex(positionOriginal);
     const startDate = 12345;
     const endDate = 345666;
+    const experienceCountBefore = parseInt(await resume.methods.getExperienceCount(accounts[1]).call());
     await resume.methods.addExperience(companyName, position, startDate, endDate).send({
       from: accounts[1],
       gas: 1000000
     });
+    const experienceCountAfter = parseInt(await resume.methods.getExperienceCount(accounts[1]).call());
+    assert.equal(experienceCountAfter, experienceCountBefore + 1);
     const exp = await resume.methods.getExperience(accounts[1], 0).call();
     assert.equal(web3.utils.hexToUtf8(exp.companyName), companyNameOriginal);
     assert.equal(web3.utils.hexToUtf8(exp.position), positionOriginal);
