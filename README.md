@@ -33,6 +33,7 @@
 ![Reference Types](images/reference_types.png)
 ![MSG](images/msg.png)
 ![How Mappings Work](images/how_mappings_work.png)
+![Transfer Funds](images/transfer_funds.png)
 
 ### Things to research
 
