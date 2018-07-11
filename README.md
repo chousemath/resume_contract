@@ -23,6 +23,26 @@
 * In mappings, values are not iterable
 * A mapping is a reference type, and thus if there is a mapping in a struct definition, we do not have to initialize that mapping when we initialize that struct
 
+### Notes on Solidity `memory` and `storage` keywords
+
+* `memory` variables are temporary variables that exist only inside the calling function (they cannot be declared outside of one), they get wiped after the function exits and they are generally cheaper to use than storage variables,  this is used to hold temporary values. It is erased between (external) function calls and is cheaper to use than storage variables
+* `storage`, where all the contract state variables reside, every contract has its own storage and it is persistent between function calls and quite expensive to use
+
+### General Notes on Hot and Cold Storage
+
+* The whole point of cold storage is to keep your assets in cold storage from being vulnerable to attacks should your hot storage be compromised
+* Both hot and cold storage sides know their own secret keys of course, but they possess each other's addresses
+* Cold storage is not online
+* Because hot storage knows the addresses of the cold storage, the hot storage accounts can still send assets to the cold storage accounts even if the cold storage is offline
+* Ideally, for security purposes, we want to use a fresh cold address each time we send assets from a hot storage account to a cold storage account
+
+### Notes on Hierarchical Wallets
+
+* Address generation information does not leak keys, so it can be freely distributed
+* Bitcoin has ECDSA which supports hierarchical key generation
+* Hierarchical address generation is performed on the hot side, while hierarchical key generation is performed on the cold side
+* This whole setup allows us to have constant one-way communication from the hot side to the cold side without having constant connections from the cold side
+
 ### Operational Notes
 
 * When deployed to the Rinkeby test network, each transaction takes roughly 15~30 seconds to execute, need to make sure that the UI has elements in place to let the user know that the transaction is in progress

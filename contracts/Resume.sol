@@ -23,6 +23,11 @@ contract Resume {
         uint256 startDate; // when this job began
         uint256 endDate; // when this job ended
     }
+    struct Organization {
+        bytes32 name; // official name of the organization
+        bytes32 latitude; // bytes32 encoded latitude numeric value
+        bytes32 longitude; // bytes32 encoded longitude numeric value
+    }
 
     address public manager;
     address[] public users;
@@ -52,6 +57,9 @@ contract Resume {
     mapping (address => uint16) private DocumentCounts; // number of documents each user has uploaded
     mapping (address => Experience[]) private Experiences;
     mapping (address => uint16) private ExperienceCounts; // number of experiences each user has uploaded
+    
+    mapping (address => Organization[]) private Organizations;
+    mapping (address => uint16) private OrganizationCounts;
 
     constructor() public { manager = msg.sender; }
 
@@ -163,9 +171,9 @@ contract Resume {
         Multihash storage ipfsHash = ProfileImages[sender];
         return (ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
     }
-    function deleteProfileImage(address sender) public {
-        require(ProfileImages[sender].digest != 0);
-        delete ProfileImages[sender];
+    function deleteProfileImage() public {
+        require(ProfileImages[msg.sender].digest != 0);
+        delete ProfileImages[msg.sender];
     }
 
     // set, retrieve, and delete documents for the applicant
@@ -180,9 +188,9 @@ contract Resume {
         Document storage doc = Documents[sender][index];
         return (doc.title, doc.document.digest, doc.document.hashFunction, doc.document.size);
     }
-    function deleteDocument(address sender, uint16 index) public recordUser {
-        require(Documents[sender][index].document.digest != 0);
-        delete Documents[sender][index];
+    function deleteDocument(uint16 index) public recordUser {
+        require(Documents[msg.sender][index].document.digest != 0);
+        delete Documents[msg.sender][index];
     }
     function getDocumentCount(address sender) public view returns(uint16) {
         return DocumentCounts[sender];
@@ -206,11 +214,32 @@ contract Resume {
         Experience storage exp = Experiences[sender][index];
         return (exp.companyName, exp.position, exp.startDate, exp.endDate);
     }
-    function deleteExperience(address sender, uint16 index) public {
-        require(Experiences[sender][index].startDate != 0);
-        delete Experiences[sender][index];
+    function deleteExperience(uint16 index) public {
+        require(Experiences[msg.sender][index].startDate != 0);
+        delete Experiences[msg.sender][index];
     }
     function getExperienceCount(address sender) public view returns(uint16) {
         return ExperienceCounts[sender];
+    }
+
+    function addOrganization(bytes32 name, bytes32 latitude, bytes32 longitude) public {
+        Organizations[msg.sender].push(Organization({
+            name: name, latitude: latitude, longitude: longitude
+        }));
+        OrganizationCounts[msg.sender]++;
+    }
+    function getOrganization(address sender, uint16 index) public view returns(
+        bytes32 name,
+        bytes32 latitude,
+        bytes32 longitude
+    ) {
+        Organization storage org = Organizations[sender][index];
+        return (org.name, org.latitude, org.longitude);
+    }
+    function deleteOrganization(uint16 index) public {
+        delete Organizations[msg.sender][index];
+    }
+    function getOrganizationCount(address sender) public view returns(uint16) {
+        return OrganizationCounts[sender];
     }
 }

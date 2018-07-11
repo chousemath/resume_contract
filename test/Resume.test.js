@@ -287,7 +287,7 @@ describe('Resume', () => {
     assert.equal(multihash.getMultihashFromContractResponse(ipfsHash), originalMultihash);
     assert.equal(web3.utils.hexToUtf8(ipfsHash.title), originalTitle);
 
-    await resume.methods.deleteDocument(accounts[1], 0).send({ from: accounts[1], gas: 1000000 });
+    await resume.methods.deleteDocument(0).send({ from: accounts[1], gas: 1000000 });
     const ipfsHashAfterDelete = await resume.methods.getDocument(accounts[1], 0).call();
     assert.notEqual(multihash.getMultihashFromContractResponse(ipfsHashAfterDelete), originalMultihash);
     assert.notEqual(web3.utils.hexToUtf8(ipfsHashAfterDelete.title), originalTitle);
@@ -312,7 +312,7 @@ describe('Resume', () => {
     assert.equal(web3.utils.hexToUtf8(exp.position), positionOriginal);
     assert.equal(exp.startDate, startDate);
     assert.equal(exp.endDate, endDate);
-    await resume.methods.deleteExperience(accounts[1], 0).send({
+    await resume.methods.deleteExperience(0).send({
       from: accounts[1],
       gas: 1000000
     });
@@ -321,6 +321,37 @@ describe('Resume', () => {
     assert.notEqual(web3.utils.hexToUtf8(exp2.position), positionOriginal);
     assert.notEqual(exp2.startDate, startDate);
     assert.notEqual(exp2.endDate, endDate);
+  });
+
+  it('successfully uploads a new organization for a person', async () => {
+    const organizationNameOriginal = 'The Best Organization';
+    const organizationName = web3.utils.utf8ToHex(organizationNameOriginal);
+    // Note that here, I actually use the utf8ToHex method instead of the
+    // numberToHex method, for some reason, the web3 numberToHex cannot accept
+    // a decimal value
+    const latitudeOriginal = (37.5326).toString();
+    const longitudeOriginal = (127.024612).toString();
+    const latitude = web3.utils.utf8ToHex(latitudeOriginal);
+    const longitude = web3.utils.utf8ToHex(longitudeOriginal);
+    const organizationCountBefore = parseInt(await resume.methods.getOrganizationCount(accounts[1]).call());
+    await resume.methods.addOrganization(organizationName, latitude, longitude).send({
+      from: accounts[1],
+      gas: 1000000
+    });
+    const organizationCountAfter = parseInt(await resume.methods.getOrganizationCount(accounts[1]).call());
+    assert.equal(organizationCountAfter, organizationCountBefore + 1);
+    const org = await resume.methods.getOrganization(accounts[1], 0).call();
+    assert.equal(web3.utils.hexToUtf8(org.name), organizationNameOriginal);
+    assert.equal(web3.utils.hexToUtf8(org.latitude), latitudeOriginal);
+    assert.equal(web3.utils.hexToUtf8(org.longitude), longitudeOriginal);
+    await resume.methods.deleteOrganization(0).send({
+      from: accounts[1],
+      gas: 1000000
+    });
+    const org2 = await resume.methods.getOrganization(accounts[1], 0).call();
+    assert.notEqual(web3.utils.hexToUtf8(org2.name), organizationNameOriginal);
+    assert.notEqual(web3.utils.hexToNumber(org2.latitude), latitudeOriginal);
+    assert.notEqual(web3.utils.hexToNumber(org2.longitude), longitudeOriginal);
   });
 
   it('successfully allows a manager or collaborator to confirm an applicant`\s profile', async () => {
