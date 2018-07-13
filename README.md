@@ -1,3 +1,22 @@
+### General notes on proof of work consensus
+
+* New transactions are broadcast to every single node
+* All nodes collect new transactions into a block
+* Every single node works on finding a proof of work for its block, this is to ensure than no one node is cheating
+* Mining ensures a secure, tamper-resistant consensus
+* When a proof of work is figured out by a node, it is broadcast out to the entire network
+* The network accepts broadcasted blocks if they are valid
+* Nodes then work on figuring out the next block in the chain
+* Nodes only consider the longest chain to be valid
+* A miner will generally list transactions by transaction cost (high to low) and include as many transactions as it can in a single block (incentivized by the additional gas cost / gas price)
+* A block in Ethereum should be mined approximately every 10-19 seconds
+* If a block is mined significantly faster than 10-19 seconds, the difficulty is increased, if a block is mined significantly slower, the difficulty is decreased automatically by the network
+
+### General notes on Ethereum
+
+* No more than about 18 million ether gets issued every year
+* Ethereum uses the `Ethash` proof of work algorithm
+
 ### General notes on smart contracts
 
 * Smart contracts are “immutable”. Once they are deployed, their code is impossible to change, making it impossible to fix any discovered bugs.
