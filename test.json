@@ -5,6 +5,6 @@
   "pressure": "1002.88",
   "sea_level": "1025.39",
   "grnd_level": "1002.88",
-  "humidity": "75",
+  "humidity": 75,
   "temp_kf": "2.71"
 }
