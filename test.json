@@ -1,92 +1,37 @@
 {
-  "data": [
+  "cod": "200",
+  "message": 0.0076,
+  "cnt": 38,
+  "list": [
     {
-      "timestamp": "2018-07-14 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531548000
     },
     {
-      "timestamp": "2018-07-15 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531558800
     },
     {
-      "timestamp": "2018-07-16 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531569600
     },
     {
-      "timestamp": "2018-07-17 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531580400
     },
     {
-      "timestamp": "2018-07-18 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531591200
     },
     {
-      "timestamp": "2018-07-19 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531602000
     },
     {
-      "timestamp": "2018-07-20 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
-    },
-    {
-      "timestamp": "2018-07-21 03:00:00",
-      "temp": "304.49",
-      "temp_min": "301.782",
-      "temp_max": "304.49",
-      "pressure": "1002.88",
-      "sea_level": "1025.39",
-      "grnd_level": "1002.88",
-      "humidity": "75",
-      "temp_kf": "2.71"
+      "dt": 1531612800
     }
-  ]
+  ],
+  "city": {
+    "id": 1835848,
+    "name": "Seoul",
+    "coord": {
+      "lat": 37.5683,
+      "lon": 126.9778
+    },
+    "country": "KR"
+  }
 }
